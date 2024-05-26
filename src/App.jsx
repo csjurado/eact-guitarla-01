@@ -21,9 +21,15 @@ function App() {
       setCart([...cart, item]);
     }
   }
+  function removeFromCart(id){
+    setCart(prevCart => prevCart.filter(guitar => guitar.id !== id ))
+    console.log('Eliminado....',id);
+  }
   return (
     <>
-      <Header cart={cart} />
+      <Header 
+        cart={cart}
+        removeFromCart={removeFromCart} />
       <main className="container-xl mt-5">
         <h2 className="text-center">Nuestra Colección</h2>
 
