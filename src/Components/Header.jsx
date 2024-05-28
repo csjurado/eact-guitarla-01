@@ -1,5 +1,11 @@
 import { useMemo } from "react";
-export default function Header({ cart, removeFromCart }) {
+export default function Header({
+  cart,
+  removeFromCart,
+  increseQuantity,
+  decreaseQuantity,
+  clearCart,
+}) {
   // State derivado
   const isEmpty = useMemo(() => cart.length === 0, [cart]);
   const cartTotal = useMemo(
@@ -15,7 +21,7 @@ export default function Header({ cart, removeFromCart }) {
             <a href="index.html">
               <img
                 className="img-fluid"
-                src="./public/img/logo.svg"
+                src="/img/logo.svg"
                 alt="imagen logo"
               />
             </a>
@@ -24,7 +30,7 @@ export default function Header({ cart, removeFromCart }) {
             <div className="carrito">
               <img
                 className="img-fluid"
-                src="./public/img/carrito.png"
+                src="/img/carrito.png"
                 alt="imagen carrito"
               />
 
@@ -56,19 +62,28 @@ export default function Header({ cart, removeFromCart }) {
                             <td>{guitar.name}</td>
                             <td className="fw-bold">$ {guitar.price}</td>
                             <td className="flex align-items-start gap-4">
-                              <button type="button" className="btn btn-dark">
+                              <button
+                                type="button"
+                                className="btn btn-dark"
+                                onClick={() => decreaseQuantity(guitar.id)}
+                              >
                                 -
                               </button>
                               {guitar.quantity}
-                              <button type="button" className="btn btn-dark">
+                              <button
+                                type="button"
+                                className="btn btn-dark"
+                                onClick={() => increseQuantity(guitar.id)}
+                              >
                                 +
                               </button>
                             </td>
                             <td>
-                              <button 
-                                  className="btn btn-danger" 
-                                  type="button"
-                                  onClick={()=>removeFromCart(guitar.id)}>
+                              <button
+                                className="btn btn-danger"
+                                type="button"
+                                onClick={() => removeFromCart(guitar.id)}
+                              >
                                 X
                               </button>
                             </td>
@@ -83,7 +98,10 @@ export default function Header({ cart, removeFromCart }) {
                     </p>
                   </>
                 )}
-                <button className="btn btn-dark w-100 mt-3 p-2">
+                <button
+                  className="btn btn-dark w-100 mt-3 p-2"
+                  onClick={clearCart}
+                >
                   Vaciar Carrito
                 </button>
               </div>

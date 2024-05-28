@@ -7,8 +7,19 @@ import { db } from "./data/db";
 // import "./App.css";
 
 function App() {
-  const [data, setData] = useState(db);
-  const [cart, setCart] = useState([]);
+  const initalCart = () => {
+    const localStorageCart = localStorage.getItem("cart");
+    return localStorageCart ? JSON.parse(localStorageCart) : [];
+  };
+  const [data] = useState(db);
+  const [cart, setCart] = useState(initalCart);
+
+  const MAX_ITEMS = 10;
+  const MIN_ITEMS = 1;
+
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
 
   function addToCart(item) {
     const itemsExist = cart.findIndex((guitar) => guitar.id === item.id);
@@ -20,16 +31,52 @@ function App() {
       item.quantity = 1;
       setCart([...cart, item]);
     }
+    saveLocalStorage();
   }
-  function removeFromCart(id){
-    setCart(prevCart => prevCart.filter(guitar => guitar.id !== id ))
-    console.log('Eliminado....',id);
+  function removeFromCart(id) {
+    setCart((prevCart) => prevCart.filter((guitar) => guitar.id !== id));
+    // console.log("Eliminado....", id);
+  }
+
+  function increseQuantity(id) {
+    const updateCart = cart.map((item) => {
+      if (item.id === id && item.quantity < MAX_ITEMS) {
+        return {
+          ...item,
+          quantity: item.quantity + 1,
+        };
+      }
+      return item;
+    });
+    setCart(updateCart);
+  }
+  function decreaseQuantity(id) {
+    const updateCart = cart.map((item) => {
+      if (item.id === id && item.quantity > MIN_ITEMS) {
+        return {
+          ...item,
+          quantity: item.quantity - 1,
+        };
+      }
+      return item;
+    });
+    setCart(updateCart);
+  }
+  function clearCart() {
+    setCart([]);
+  }
+  function saveLocalStorage() {
+    localStorage.setItem("cart", JSON.stringify(cart));
   }
   return (
     <>
-      <Header 
+      <Header
         cart={cart}
-        removeFromCart={removeFromCart} />
+        removeFromCart={removeFromCart}
+        increseQuantity={increseQuantity}
+        decreaseQuantity={decreaseQuantity}
+        clearCart={clearCart}
+      />
       <main className="container-xl mt-5">
         <h2 className="text-center">Nuestra Colección</h2>
 
